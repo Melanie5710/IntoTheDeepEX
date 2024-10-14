@@ -27,7 +27,8 @@ public class StateMachine {
         ARMDOWN,
         LEVEL1,
         STAGEHOME,
-        DROPOFF
+        DROPOFF,
+        PICKUP,
     }
 
     public void setState(LiftState state) {
@@ -56,7 +57,7 @@ public class StateMachine {
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        liftState = LiftState.STAGEHOME;
+//        liftState = LiftState.STAGEHOME;
 
     }
 
@@ -64,6 +65,9 @@ public class StateMachine {
         switch (liftState) {
             case STAGEHOME:
                 stagehome();
+                break;
+            case PICKUP:
+                pickup();
                 break;
             case UPWARD:
                 upward();
@@ -88,10 +92,10 @@ public class StateMachine {
         }
     }
     public void straightforward() {
-        moveToTargetrStage(104, 0.05);
+        moveToTargetrStage(175, 0.4);
     }
     public void upward() {
-        moveToTargetrStage(440, 0.05);
+        moveToTargetrStage(680, 0.05);
     }
 
     public void moveToTargetStage(int target, double power) {
@@ -105,15 +109,16 @@ public class StateMachine {
         rslider.setTargetPosition(target);
         rslider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
-        public void stagehome(){
-        moveToTargetrStage(10, 0.3);
+    public void pickup(){moveToTargetrStage(130, 0.3);}
+    public void stagehome(){
+        moveToTargetrStage(15, 0.3);
     }
     public void testhigh() {
-        moveToTargetrStage(rslider.getCurrentPosition() - 10, 1);
+        moveToTargetrStage(rslider.getCurrentPosition() + 10, 1);
     }
 
     public void testlow() {
-        moveToTargetrStage(rslider.getCurrentPosition() + 10, 1);
+        moveToTargetrStage(rslider.getCurrentPosition() - 10, 1);
     }
 
     public void testhighs() {

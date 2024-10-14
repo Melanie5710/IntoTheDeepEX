@@ -20,7 +20,7 @@ public class rsliderPID extends OpMode{
 
     public static int target = 104;
 
-    private final double ticks_in_degree = 537.7 / 180.0;
+    private final double ticks_in_degree = 1993.6 / 180.0;
     private DcMotorEx rslider;
     @Override
     public void init(){
