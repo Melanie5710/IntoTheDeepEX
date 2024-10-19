@@ -13,7 +13,7 @@ public class main extends OpMode {
     //diff version for diff chassis
     //rs = 113
     //S = IDK
-    public static final double CLAW_CLOSE = 0.54;
+    public static final double CLAW_CLOSE = 0.5;
     public static final double CLAW_OPEN = 0.63;
     public static final double UP = 0.5167;
     public static final double RDOWN = 0.0289;
@@ -110,14 +110,6 @@ public class main extends OpMode {
             stateMachine.setState(StateMachine.LiftState.STAGEHOME);
             stateMachine.runState(liftState);
         }
-        if(gamepad2.dpad_up){
-            stateMachine.setState(StateMachine.LiftState.TESTHIGH);
-            stateMachine.runState(liftState);
-        }
-        if(gamepad2.dpad_down){
-            stateMachine.setState(StateMachine.LiftState.TESTLOW);
-            stateMachine.runState(liftState);
-        }
         if(gamepad2.left_bumper){
             claw.setPosition(CLAW_OPEN);
         }
@@ -131,16 +123,28 @@ public class main extends OpMode {
 //            rclaw.setPosition(rclaw.getPosition() - 0.0005);
 //        }
         if(gamepad1.dpad_up){
-            stateMachine.setState(StateMachine.LiftState.TESTHIGHS);
+            stateMachine.setState(StateMachine.LiftState.TESTHIGH);
             stateMachine.runState(liftState);
         }
         if(gamepad1.dpad_down){
+            stateMachine.setState(StateMachine.LiftState.TESTLOW);
+            stateMachine.runState(liftState);
+        }
+        if(gamepad1.dpad_right){
+            stateMachine.setState(StateMachine.LiftState.TESTHIGHS);
+            stateMachine.runState(liftState);
+        }
+        if(gamepad1.dpad_left){
             stateMachine.setState(StateMachine.LiftState.TESTLOWS);
             stateMachine.runState(liftState);
+        }
+        if(gamepad1.b){
+            rclaw.setPosition(RUP);
         }
         if(gamepad1.x){
             rclaw.setPosition(RDOWN);
         }
+
         if(gamepad1.right_bumper){
             claw.setPosition(CLAW_CLOSE);
         }
@@ -150,13 +154,11 @@ public class main extends OpMode {
         if(gamepad1.y){
             hrclaw.setPosition(HRMIDDLE);
         }
-        if(gamepad1.b){
-            rclaw.setPosition(RUP);
-        }
-        if(gamepad1.dpad_right){
-            stateMachine.setState(StateMachine.LiftState.PICKUP);
-            stateMachine.runState(liftState);
-        }
+
+//        if(gamepad1.dpad_right){
+//            stateMachine.setState(StateMachine.LiftState.PICKUP);
+//            stateMachine.runState(liftState);
+//        }
         telemetry.addData("claw",claw.getPosition());
         telemetry.addData("rotating claw",rclaw.getPosition());
         telemetry.addData("rotating horizontal claw",hrclaw.getPosition());

@@ -18,7 +18,7 @@ public class servotester extends OpMode {
         hrclaw = hardwareMap.get(Servo.class, "hrclaw");
         claw.setDirection(Servo.Direction.REVERSE);
         rclaw.setDirection(Servo.Direction.REVERSE);
-        claw.setPosition(0);
+//        claw.setPosition(0);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -30,10 +30,10 @@ public class servotester extends OpMode {
 
         }
         if(gamepad2.dpad_up){
-            claw.setPosition(claw.getPosition() + 0.0005);
+            rclaw.setPosition(rclaw.getPosition() + 0.0005);
         }
         if(gamepad2.dpad_down){
-            claw.setPosition(claw.getPosition() - 0.0005);
+            rclaw.setPosition(rclaw.getPosition() - 0.0005);
         }
 //        if(gamepad2.dpad_left){
 //            airplane.setPosition(airplane.getPosition() + 0.0005);
