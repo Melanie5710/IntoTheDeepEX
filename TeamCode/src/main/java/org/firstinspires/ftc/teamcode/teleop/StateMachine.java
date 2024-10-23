@@ -18,6 +18,7 @@ public class StateMachine{
     public static final double RUP = 0.7044;
     public static final double HRMIDDLE = 0.695;
     public static final double HRLEFT = 0.3539;
+    public static final boolean wait = true;
     private ElapsedTime runtime = new ElapsedTime();
     public static Telemetry telemetry;
     protected HardwareMap hwMap;
@@ -111,7 +112,7 @@ public class StateMachine{
     public void sub(){
         moveToTargetrStage(977, 0.5);
         runtime.reset();
-        while (slider.getCurrentPosition() != 5000000) {
+        while (wait) {
             if (runtime.seconds() > 1.3) {
                 moveToTargetStage(-2650,0.8);
                 break;
@@ -122,21 +123,21 @@ public class StateMachine{
     public void pickup() {
         moveToTargetrStage(300, 0.8);
         runtime.reset();
-        while (claw.getPosition() != CLAW_CLOSE) {
+        while (wait) {
             if (runtime.seconds() > 1) {
                 claw.setPosition(CLAW_CLOSE);
                 break;
             }
         }
         runtime.reset();
-        while (rslider.getCurrentPosition() != 5000000) {
+        while (wait) {
             if (runtime.seconds() > 0.5) {
                 moveToTargetrStage(373,0.8);
                 break;
             }
         }
         runtime.reset();
-        while (slider.getCurrentPosition() != 5000000) {
+        while (wait) {
             if (runtime.seconds() > 0.5) {
                 moveToTargetStage(-10,1.0);
                 break;
@@ -146,13 +147,13 @@ public class StateMachine{
     public void basket() {
         moveToTargetrStage(1365, 0.5);
         runtime.reset();
-        while (slider.getCurrentPosition() != 5000000) {
+        while (wait) {
             if (runtime.seconds() > 1.3) {
                 moveToTargetStage(-5920,1.0);
                 break;
             }
         }
-        while (rclaw.getPosition() != RUP) {
+        while (wait) {
             if (runtime.seconds() > 2.8) {
                 rclaw.setPosition(RUP);
                 break;
@@ -163,7 +164,7 @@ public class StateMachine{
     public void extend(){
         moveToTargetrStage(350, 0.8);
         runtime.reset();
-        while (slider.getCurrentPosition() != 5000000) {
+        while (wait) {
             if (runtime.seconds() > 0.5) {
                 moveToTargetStage(-5490,1.0);
                 break;
@@ -174,7 +175,7 @@ public class StateMachine{
     public void stagehome(){
         moveToTargetStage(-10,1.0);
         runtime.reset();
-        while (rslider.getCurrentPosition() != 5000000) {
+        while (wait) {
             if (runtime.seconds() > 3) {
                 moveToTargetrStage(373,0.4);
                 break;
@@ -209,12 +210,6 @@ public class StateMachine{
         rslider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 }
-//        runtime.reset();
-//        while (rclaw.getPosition() != RDOWN) {
-//            if (runtime.seconds() > 1) {
-//                rclaw.setPosition(RDOWN);
-//                break;
-//            }
-//        }
+
 
 
