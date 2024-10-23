@@ -18,9 +18,13 @@ public class main extends OpMode {
     public static final double UP = 0.5167;
     public static final double RDOWN = 0.0289;
     public static final double RUP = 0.7044;
-    public static final double HRMIDDLE = 0.6739;
+    public static final double HRMIDDLE = 0.695;
     public static final double HRLEFT = 0.3539;
-    public static final double HRRIGHT = 1.0;
+//    public static final double HRRIGHT = 1.0;
+    boolean call = true;
+    boolean call1 = true;
+    boolean LPushed = false;
+    boolean RPushed = false;
     StateMachine stateMachine;
     private Servo claw, hrclaw, rclaw;
 
@@ -28,10 +32,7 @@ public class main extends OpMode {
     boolean aButtonPreviousState = false;
     boolean slowModeActive = false;
     static final double MOTOR_TICKS_COUNT = 537.7;
-    boolean call = true;
-    boolean call1 = true;
-    boolean LPushed = false;
-    boolean RPushed = false;
+
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing...");
@@ -74,54 +75,14 @@ public class main extends OpMode {
         frontRight.setPower(frontRightPower);
         backLeft.setPower(backLeftPower);
         backRight.setPower(backRightPower);
-
-
-//        StateMachine.LiftState liftState = stateMachine.getState();
-//        if(gamepad2.dpad_left){
-//            stateMachine.setState(StateMachine.LiftState.DROPOFF);
-//            stateMachine.runState(liftState);
-//        }
-//        if(gamepad2.y){
-//            stateMachine.setState(StateMachine.LiftState.SLIDERUP);
-//            stateMachine.runState(liftState);
-//        }
-//        if(gamepad2.x){
-//            stateMachine.setState(StateMachine.LiftState.LEVEL1);
-//            stateMachine.runState(liftState);
-//        }
-//        if(gamepad2.a){
-//            stateMachine.setState(StateMachine.LiftState.STAGEHOME);
-//            stateMachine.runState(liftState);
-//        }
-//        if(gamepad2.b){
-//            stateMachine.setState(StateMachine.LiftState.HANG);
-//            stateMachine.runState(liftState);
-//        }
-//
-        if(gamepad2.x){
-            stateMachine.setState(StateMachine.LiftState.STRAIGHTFORWARD);
+        if(gamepad1.x){
+            stateMachine.setState(StateMachine.LiftState.SUB);
             stateMachine.runState(liftState);
         }
-        if(gamepad2.y){
-            stateMachine.setState(StateMachine.LiftState.UPWARD);
+        if(gamepad1.right_bumper && gamepad1.left_bumper){
+            stateMachine.setState(StateMachine.LiftState.HOME);
             stateMachine.runState(liftState);
         }
-        if(gamepad2.a){
-            stateMachine.setState(StateMachine.LiftState.STAGEHOME);
-            stateMachine.runState(liftState);
-        }
-        if(gamepad2.left_bumper){
-            claw.setPosition(CLAW_OPEN);
-        }
-        if(gamepad2.right_bumper){
-            claw.setPosition(CLAW_CLOSE);
-        }
-//        if(gamepad2.dpad_up){
-//            rclaw.setPosition(rclaw.getPosition() + 0.0005);
-//        }
-//        if(gamepad2.dpad_down){
-//            rclaw.setPosition(rclaw.getPosition() - 0.0005);
-//        }
         if(gamepad1.dpad_up){
             stateMachine.setState(StateMachine.LiftState.TESTHIGH);
             stateMachine.runState(liftState);
@@ -139,26 +100,50 @@ public class main extends OpMode {
             stateMachine.runState(liftState);
         }
         if(gamepad1.b){
-            rclaw.setPosition(RUP);
+            stateMachine.setState(StateMachine.LiftState.EXTEND);
+           stateMachine.runState(liftState);
         }
-        if(gamepad1.x){
-            rclaw.setPosition(RDOWN);
-        }
-
-        if(gamepad1.right_bumper){
-            claw.setPosition(CLAW_CLOSE);
-        }
-        if(gamepad1.left_bumper){
-            claw.setPosition(CLAW_OPEN);
+        if(gamepad1.a){
+            stateMachine.setState(StateMachine.LiftState.PICKUP);
+            stateMachine.runState(liftState);
         }
         if(gamepad1.y){
-            hrclaw.setPosition(HRMIDDLE);
+            stateMachine.setState(StateMachine.LiftState.BASKET);
+            stateMachine.runState(liftState);
+        }
+        if (gamepad1.left_bumper) {
+            LPushed = true;
+        }
+        if (LPushed && !gamepad1.left_bumper) {
+            LPushed = false;
+            if(call){
+                claw.setPosition(CLAW_OPEN);
+                call = false;
+                return;
+            }
+            else if(!call){
+                claw.setPosition(CLAW_CLOSE);
+                call = true;
+                return;
+            }
         }
 
-//        if(gamepad1.dpad_right){
-//            stateMachine.setState(StateMachine.LiftState.PICKUP);
-//            stateMachine.runState(liftState);
-//        }
+        if(gamepad1.right_bumper) {
+            RPushed = true;
+        }
+        if(RPushed && !gamepad1.right_bumper) {
+            RPushed = false;
+            if (call1) {
+                hrclaw.setPosition(HRMIDDLE);
+                call1 = false;
+                return;
+            } else if (!call1) {
+                hrclaw.setPosition(HRLEFT);
+                call1 = true;
+                return;
+            }
+        }
+
         telemetry.addData("claw",claw.getPosition());
         telemetry.addData("rotating claw",rclaw.getPosition());
         telemetry.addData("rotating horizontal claw",hrclaw.getPosition());

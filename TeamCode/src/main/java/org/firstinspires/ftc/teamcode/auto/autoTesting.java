@@ -26,50 +26,18 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.firstinspires.ftc.teamcode.auto;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-/*
- * This OpMode illustrates the concept of driving a path based on encoder counts.
- * The code is structured as a LinearOpMode
- *
- * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: RobotAutoDriveByTime;
- *
- *  This code ALSO requires that the drive Motors have been configured such that a positive
- *  power command moves them forward, and causes the encoders to count UP.
- *
- *   The desired path in this example is:
- *   - Drive forward for 48 inches
- *   - Spin right for 12 Inches
- *   - Drive Backward for 24 inches
- *   - Stop and close the claw.
- *
- *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
- *  that performs the actual movement.
- *  This method assumes that each movement is relative to the last stopping place.
- *  There are other ways to perform encoder based moves, but this method is probably the simplest.
- *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
- */
-
 @Autonomous
-public class blueRight extends LinearOpMode {
-
-    /* Declare OpMode members. */
+public class autoTesting extends LinearOpMode {
+    private LinearOpMode linearOpMode;
     private DcMotor frontLeft, frontRight, backLeft, backRight;
-
     private ElapsedTime runtime = new ElapsedTime();
 
 
@@ -77,10 +45,10 @@ public class blueRight extends LinearOpMode {
     public void runOpMode() {
 
         // Initialize the drive system variables.
-        frontLeft = hardwareMap.get(DcMotorEx.class, "leftFront");
-        frontRight = hardwareMap.get(DcMotorEx.class, "rightFront");
-        backLeft = hardwareMap.get(DcMotorEx.class, "leftBack");
-        backRight = hardwareMap.get(DcMotorEx.class, "rightBack");
+        frontLeft = linearOpMode.hardwareMap.get(DcMotorEx.class, "leftFront");
+        frontRight = linearOpMode.hardwareMap.get(DcMotorEx.class, "rightFront");
+        backLeft = linearOpMode.hardwareMap.get(DcMotorEx.class, "leftBack");
+        backRight = linearOpMode.hardwareMap.get(DcMotorEx.class, "rightBack");
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -122,7 +90,7 @@ public class blueRight extends LinearOpMode {
             backRight.setPower(speed);
             backLeft.setPower(speed);
 
-        }
+    }
         public void reset(){
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -131,7 +99,7 @@ public class blueRight extends LinearOpMode {
     }
         public void wait(int timeoutS){
             runtime.reset();
-            while (opModeIsActive() && runtime.seconds() < timeoutS) {
+            while (linearOpMode.opModeIsActive() && runtime.seconds() < timeoutS) {
                 telemetry.addData("Currently at", " at %7d :%7d", frontLeft.getCurrentPosition(), frontRight.getCurrentPosition(), backRight.getCurrentPosition(), backLeft.getCurrentPosition());
                 telemetry.update();
             }
