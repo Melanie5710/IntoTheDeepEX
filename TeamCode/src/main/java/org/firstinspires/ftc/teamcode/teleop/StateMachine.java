@@ -28,6 +28,7 @@ public class StateMachine{
     }
 
     public enum LiftState {
+        MIDDLE,
         SUB,
         PICKUP,
         BASKET,
@@ -69,7 +70,7 @@ public class StateMachine{
         rslider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rslider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rclaw.setPosition(RUP);
+        rclaw.setPosition(0.87);
         hrclaw.setPosition(HRMIDDLE);
         runtime.startTime();
 //        liftState = LiftState.STAGE HOME;
@@ -78,6 +79,9 @@ public class StateMachine{
 
     public void runState(LiftState previousState) {
         switch (liftState) {
+            case MIDDLE:
+                middle();
+                break;
             case SUB:
                 sub();
                 break;
@@ -109,30 +113,36 @@ public class StateMachine{
                 break;
         }
     }
+    public void middle(){
+        moveToTargetrStage(-825,0.8);
+    }
     public void sub(){
-        moveToTargetrStage(977, 0.5);
+        moveToTargetrStage(-1972, 0.5);
+        //-2153
         runtime.reset();
         while (wait) {
             if (runtime.seconds() > 1.3) {
-                moveToTargetStage(-2650,0.8);
+                moveToTargetStage(-2343,0.8);
+                //-1770
+                rclaw.setPosition(RDOWN);
                 break;
             }
         }
-        rclaw.setPosition(RDOWN);
     }
     public void pickup() {
-        moveToTargetrStage(300, 0.8);
-        runtime.reset();
-        while (wait) {
-            if (runtime.seconds() > 1) {
-                claw.setPosition(CLAW_CLOSE);
-                break;
-            }
-        }
+//        moveToTargetrStage(-680, 0.2);
+        claw.setPosition(CLAW_CLOSE);
+//        runtime.reset();
+//        while (wait) {
+//            if (runtime.seconds() > 1) {
+//                claw.setPosition(CLAW_CLOSE);
+//                break;
+//            }
+//        }
         runtime.reset();
         while (wait) {
             if (runtime.seconds() > 0.5) {
-                moveToTargetrStage(373,0.8);
+                moveToTargetrStage(-825,0.8);
                 break;
             }
         }
@@ -145,16 +155,11 @@ public class StateMachine{
         }
     }
     public void basket() {
-        moveToTargetrStage(1365, 0.5);
+        moveToTargetrStage(-2629, 0.5);
         runtime.reset();
         while (wait) {
             if (runtime.seconds() > 1.3) {
-                moveToTargetStage(-5920,1.0);
-                break;
-            }
-        }
-        while (wait) {
-            if (runtime.seconds() > 2.8) {
+                moveToTargetStage(-5937,1.0);
                 rclaw.setPosition(RUP);
                 break;
             }
@@ -162,11 +167,12 @@ public class StateMachine{
     }
 
     public void extend(){
-        moveToTargetrStage(350, 0.8);
+        moveToTargetrStage(-680, 0.4);
         runtime.reset();
         while (wait) {
-            if (runtime.seconds() > 0.5) {
-                moveToTargetStage(-5490,1.0);
+            if (runtime.seconds() > 0.8) {
+                moveToTargetStage(-3708,1.0);
+                claw.setPosition(CLAW_OPEN);
                 break;
             }
         }
@@ -174,21 +180,21 @@ public class StateMachine{
     }
     public void stagehome(){
         moveToTargetStage(-10,1.0);
-        runtime.reset();
-        while (wait) {
-            if (runtime.seconds() > 3) {
-                moveToTargetrStage(373,0.4);
-                break;
-            }
-        }
+//        runtime.reset();
+//        while (wait) {
+//            if (runtime.seconds() > 3) {
+////                moveToTargetrStage(373,0.4);
+//                break;
+//            }
+//        }
         rclaw.setPosition(RUP);
     }
     public void testhigh() {
-        moveToTargetrStage(rslider.getCurrentPosition() + 10, 1);
+        moveToTargetrStage(rslider.getCurrentPosition() - 50, 1);
     }
 
     public void testlow() {
-        moveToTargetrStage(rslider.getCurrentPosition() - 10, 1);
+        moveToTargetrStage(rslider.getCurrentPosition() + 50, 1);
     }
 
     public void testhighs() {

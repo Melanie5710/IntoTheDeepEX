@@ -20,6 +20,7 @@ public class main extends OpMode {
     public static final double RUP = 0.7044;
     public static final double HRMIDDLE = 0.695;
     public static final double HRLEFT = 0.3539;
+    public static int running = 0;
 //    public static final double HRRIGHT = 1.0;
     boolean call = true;
     boolean call1 = true;
@@ -56,12 +57,17 @@ public class main extends OpMode {
 //        claw.setPosition(CLAW_CLOSE);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        running = 0;
     }
 
     @Override
     public void loop() {
         StateMachine.LiftState liftState = stateMachine.getState();
-        //
+        if (running == 0){
+            rclaw.setPosition(RUP);
+            running = 10000;
+
+        }
         double drive = -gamepad1.left_stick_y * 0.5;
         double strafe = -gamepad1.left_stick_x * 0.5;
         double turn = -gamepad1.right_stick_x * 0.5;
@@ -83,20 +89,24 @@ public class main extends OpMode {
             stateMachine.setState(StateMachine.LiftState.HOME);
             stateMachine.runState(liftState);
         }
-        if(gamepad1.dpad_up){
+        if(gamepad1.dpad_up && !gamepad1.dpad_down && !gamepad1.dpad_right && !gamepad1.dpad_left){
             stateMachine.setState(StateMachine.LiftState.TESTHIGH);
             stateMachine.runState(liftState);
         }
-        if(gamepad1.dpad_down){
+        if(gamepad1.dpad_down  && !gamepad1.dpad_up && !gamepad1.dpad_right && !gamepad1.dpad_left){
             stateMachine.setState(StateMachine.LiftState.TESTLOW);
             stateMachine.runState(liftState);
         }
-        if(gamepad1.dpad_right){
+        if(gamepad1.dpad_right && !gamepad1.dpad_down && !gamepad1.dpad_up && !gamepad1.dpad_left){
             stateMachine.setState(StateMachine.LiftState.TESTHIGHS);
             stateMachine.runState(liftState);
         }
-        if(gamepad1.dpad_left){
+        if(gamepad1.dpad_left && !gamepad1.dpad_down && !gamepad1.dpad_right && !gamepad1.dpad_up){
             stateMachine.setState(StateMachine.LiftState.TESTLOWS);
+            stateMachine.runState(liftState);
+        }
+        if(gamepad1.dpad_left && gamepad1.dpad_down && gamepad1.dpad_right && gamepad1.dpad_up){
+            stateMachine.setState(StateMachine.LiftState.MIDDLE);
             stateMachine.runState(liftState);
         }
         if(gamepad1.b){
@@ -111,7 +121,7 @@ public class main extends OpMode {
             stateMachine.setState(StateMachine.LiftState.BASKET);
             stateMachine.runState(liftState);
         }
-        if (gamepad1.left_bumper) {
+        if (gamepad1.left_bumper && !gamepad1.right_bumper) {
             LPushed = true;
         }
         if (LPushed && !gamepad1.left_bumper) {
@@ -128,7 +138,7 @@ public class main extends OpMode {
             }
         }
 
-        if(gamepad1.right_bumper) {
+        if(gamepad1.right_bumper && !gamepad1.left_bumper) {
             RPushed = true;
         }
         if(RPushed && !gamepad1.right_bumper) {
