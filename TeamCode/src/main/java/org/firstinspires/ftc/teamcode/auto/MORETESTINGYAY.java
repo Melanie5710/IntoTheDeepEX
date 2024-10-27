@@ -57,7 +57,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous
-public class javatesttest extends LinearOpMode {
+public class MORETESTINGYAY extends LinearOpMode {
     private LinearOpMode linearOpMode;
     /* Declare OpMode members. */
     private DcMotor frontLeft, frontRight, backLeft, backRight;
@@ -76,29 +76,19 @@ public class javatesttest extends LinearOpMode {
         frontRight = linearOpMode.hardwareMap.get(DcMotorEx.class, "rightFront");
         backLeft = linearOpMode.hardwareMap.get(DcMotorEx.class, "leftBack");
         backRight = linearOpMode.hardwareMap.get(DcMotorEx.class, "rightBack");
-
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        frontLeft.setPower(0.2);
-        frontLeft.setTargetPosition(1000);
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses START)
         waitForStart();
-
+        if (isStarted()) {
+            frontLeft.setPower(0.1);
+            frontRight.setPower(0.1);
+            backLeft.setPower(0.1);
+            backRight.setPower(0.1);
+        }
         telemetry.addData("Path", "Complete");
         telemetry.update();
         sleep(1000);

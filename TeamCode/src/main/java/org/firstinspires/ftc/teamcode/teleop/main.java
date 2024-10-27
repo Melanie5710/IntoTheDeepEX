@@ -28,7 +28,6 @@ public class main extends OpMode {
     boolean RPushed = false;
     StateMachine stateMachine;
     private Servo claw, hrclaw, rclaw;
-
     private DcMotor frontLeft, frontRight, backLeft, backRight, slider, rslider;
     boolean aButtonPreviousState = false;
     boolean slowModeActive = false;

@@ -32,24 +32,30 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
 public class autoTesting extends LinearOpMode {
     private LinearOpMode linearOpMode;
-    private DcMotor frontLeft, frontRight, backLeft, backRight;
+    private Servo claw, hrclaw, rclaw;
+    private DcMotor frontLeft, frontRight, backLeft, backRight, slider, rslider;
     private ElapsedTime runtime = new ElapsedTime();
 
 
     @Override
     public void runOpMode() {
-
-        // Initialize the drive system variables.
-        frontLeft = linearOpMode.hardwareMap.get(DcMotorEx.class, "leftFront");
-        frontRight = linearOpMode.hardwareMap.get(DcMotorEx.class, "rightFront");
-        backLeft = linearOpMode.hardwareMap.get(DcMotorEx.class, "leftBack");
-        backRight = linearOpMode.hardwareMap.get(DcMotorEx.class, "rightBack");
-
+        frontLeft = hardwareMap.get(DcMotorEx.class, "leftFront");
+        frontRight = hardwareMap.get(DcMotorEx.class, "rightFront");
+        backLeft = hardwareMap.get(DcMotorEx.class, "leftBack");
+        backRight = hardwareMap.get(DcMotorEx.class, "rightBack");
+        slider = hardwareMap.get(DcMotorEx.class, "slider");
+        rslider = hardwareMap.get(DcMotorEx.class, "rslider");
+        claw = hardwareMap.get(Servo.class, "claw");
+        rclaw = hardwareMap.get(Servo.class, "rclaw");
+        hrclaw = hardwareMap.get(Servo.class, "hrclaw");
+        claw.setDirection(Servo.Direction.REVERSE);
+        rclaw.setDirection(Servo.Direction.REVERSE);
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
@@ -63,46 +69,55 @@ public class autoTesting extends LinearOpMode {
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        rclaw.setPosition(0.87);
         waitForStart();
 
-//        frontRight.setPower(0.1);
-//        encoderDrive(0.5, -2000, 2000, 2000, -2000, 8);
-        encoderDrive(0.1, 2000, 2000, 2000, 2000);
+        frontLeftMove(1000, 0.1);
+        frontRightMove(1000, 0.1);
+        backLeftMove(1000, 0.1);
+        backRightMove(1000, 0.1);
         wait(5);
-        reset();
+
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
 
-    public void encoderDrive(double speed, int front_Left, int front_Right, int back_Left, int back_Right) {
-            frontLeft.setTargetPosition(front_Left);
-            frontRight.setTargetPosition(front_Right);
-            backLeft.setTargetPosition(back_Left);
-            backRight.setTargetPosition(back_Right);
-
-            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            frontRight.setPower(speed);
-            frontLeft.setPower(speed);
-            backRight.setPower(speed);
-            backLeft.setPower(speed);
-
+    public void backRightMove(int target, double power){
+        backRight.setPower(power);
+        backRight.setTargetPosition(target);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
-        public void reset(){
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+    public void backLeftMove(int target, double power){
+        backLeft.setPower(power);
+        backLeft.setTargetPosition(target);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+
+    public void frontLeftMove(int target, double power){
+        frontLeft.setPower(power);
+        frontLeft.setTargetPosition(target);
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void frontRightMove(int target, double power){
+        frontRight.setPower(power);
+        frontRight.setTargetPosition(target);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
         public void wait(int timeoutS){
             runtime.reset();
-            while (linearOpMode.opModeIsActive() && runtime.seconds() < timeoutS) {
+            while (opModeIsActive() && runtime.seconds() < timeoutS) {
                 telemetry.addData("Currently at", " at %7d :%7d", frontLeft.getCurrentPosition(), frontRight.getCurrentPosition(), backRight.getCurrentPosition(), backLeft.getCurrentPosition());
                 telemetry.update();
             }
+        }
+        public void reset(){
+            frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
     }
 
