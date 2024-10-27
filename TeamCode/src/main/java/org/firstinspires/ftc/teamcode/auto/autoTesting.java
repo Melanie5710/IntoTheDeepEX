@@ -69,44 +69,83 @@ public class autoTesting extends LinearOpMode {
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rslider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rslider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         rclaw.setPosition(0.87);
+        claw.setPosition(0.5);
         waitForStart();
 
-        frontLeftMove(1000, 0.1);
-        frontRightMove(1000, 0.1);
-        backLeftMove(1000, 0.1);
-        backRightMove(1000, 0.1);
-        wait(5);
+//        frontRight.setPower(0.1);
+//        encoderDrive(0.5, -2000, 2000, 2000, -2000, 8);
+//        if(isStarted()) {
+        encoderDrive(0.5, 100, 100, 100, 100);
+        wait(0.5);
+        reset();
+        encoderDrive(0.5,-1550,1550,1550,-1550);
+        wait(3.0);
+        reset();
+        encoderDrive(0.5, 900, 900, 900, 900);
+        wait(2.0);
+        reset();
+        moveToTargetrStage(-2380,0.5);
+        wait(3.0);
+        moveToTargetStage(-1106, 1.0);
+        hrclaw.setPosition(0.695);
+        rclaw.setPosition(0.0294);
+        encoderDrive(0.1, 400, 400, 400, 400);
+        wait(3.0);
+        reset();
+        moveToTargetrStage(-2292, 0.2);
+        wait(2.0);
+        moveToTargetStage(-300,0.2);
+        wait(2.0);
+        claw.setPosition(0.63);
+        wait(0.1);
+        encoderDrive(0.7, -800, -800, -800, -800);
+        wait(2.0);
+        reset();
+        moveToTargetStage(-10,1.0);
+        wait(1.0);
+        rclaw.setPosition(0.87);
+        moveToTargetrStage(-90, 0.5);
+        wait(2.0);
+        encoderDrive(0.5, -600, -600, -600, -600);
+        wait(2.0);
+        reset();
+        encoderDrive(0.7,2300, -2300,-2300, 2300);
+        wait(6.0);
 
+
+
+
+
+//        }
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
 
-    public void backRightMove(int target, double power){
-        backRight.setPower(power);
-        backRight.setTargetPosition(target);
-        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
+    public void encoderDrive(double speed, int front_Left, int front_Right, int back_Left, int back_Right) {
+            frontRight.setPower(speed);
+            frontLeft.setPower(speed);
+            backRight.setPower(speed);
+            backLeft.setPower(speed);
 
-    public void backLeftMove(int target, double power){
-        backLeft.setPower(power);
-        backLeft.setTargetPosition(target);
-        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
+            frontLeft.setTargetPosition(front_Left);
+            frontRight.setTargetPosition(front_Right);
+            backLeft.setTargetPosition(back_Left);
+            backRight.setTargetPosition(back_Right);
 
-    public void frontLeftMove(int target, double power){
-        frontLeft.setPower(power);
-        frontLeft.setTargetPosition(target);
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
+            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-    public void frontRightMove(int target, double power){
-        frontRight.setPower(power);
-        frontRight.setTargetPosition(target);
-        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
 
-        public void wait(int timeoutS){
+    }
+        public void wait(double timeoutS){
             runtime.reset();
             while (opModeIsActive() && runtime.seconds() < timeoutS) {
                 telemetry.addData("Currently at", " at %7d :%7d", frontLeft.getCurrentPosition(), frontRight.getCurrentPosition(), backRight.getCurrentPosition(), backLeft.getCurrentPosition());
@@ -119,6 +158,17 @@ public class autoTesting extends LinearOpMode {
             backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
+         public void moveToTargetStage(int target, double power) {
+            slider.setPower(power);
+            slider.setTargetPosition(target);
+            slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+        public void moveToTargetrStage(int target, double power) {
+            rslider.setPower(power);
+            rslider.setTargetPosition(target);
+            rslider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
     }
 
 
